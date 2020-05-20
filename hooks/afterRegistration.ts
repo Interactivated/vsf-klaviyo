@@ -1,11 +1,13 @@
 import rootStore from '@vue-storefront/core/store'
+import { StorageManager } from '@vue-storefront/core/lib/storage-manager'
 
 export async function afterRegistration({ Vue, config, store, isServer }) {
   if (!isServer && config.klaviyo && config.klaviyo.public_key) {
     await store.dispatch('klaviyo/loadCustomerFromCache')
 
     if (!store.state.klaviyo.customer) {
-      const receivedData = await Vue.prototype.$db.checkoutFieldsCollection.getItem('personal-details')
+      const checkoutStorage = StorageManager.get('checkout')
+      const receivedData = await checkoutStorage.getItem('personal-details')
       if (receivedData) {
         store.dispatch('klaviyo/identify', { personalDetails: receivedData })
       }
