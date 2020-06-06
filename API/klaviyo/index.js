@@ -85,11 +85,13 @@ module.exports = ({ config, db }) => {
     let request = require('request')
 
     request({
-      url: config.extensions.klaviyo.apiUrl + '/v2/list/' + listId + '/subscribe',
+      url: config.extensions.klaviyo.apiUrl + '/v2/list/' + listId + '/members',
       method: 'POST',
-      headers: { 'api-key': config.extensions.klaviyo.apiKey },
       json: true,
-      body: { profiles: [ { email: userData.email } ] }
+      body: {
+        api_key: config.extensions.klaviyo.apiKey,
+        profiles: [ { email: userData.email } ]
+      }
     }, (error, response, body) => {
       if (error) {
         apiStatus(res, error, 500)
