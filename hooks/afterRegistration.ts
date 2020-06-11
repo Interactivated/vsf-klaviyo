@@ -18,12 +18,12 @@ export async function afterRegistration({ Vue, config, store, isServer }) {
     })
 
     Vue.prototype.$bus.$on('checkout-after-personalDetails', receivedData => {
-      if (!store.state.klaviyo.customer && receivedData.hasOwnProperty('email')) {
+      if (!store.state.klaviyo.customer && receivedData.hasOwnProperty('emailAddress')) {
         store.dispatch('klaviyo/identify', { personalDetails: receivedData })
       }
     })
 
-    Vue.prototype.$bus.$on('user-before-logout', () => {
+    Vue.prototype.$bus.$on('user-after-logout', () => {
       store.dispatch('klaviyo/resetCustomer')
     })
 
@@ -46,7 +46,7 @@ export async function afterRegistration({ Vue, config, store, isServer }) {
       })
     })
 
-    Vue.prototype.$bus.$on('checkout-after-mounted', event => { // TODO: maybe bind it to another event
+    Vue.prototype.$bus.$on('checkout-after-load', event => {
       const onCheckoutStarted = event => {
         Vue.prototype.$bus.$off('cart-after-updatetotals', onCheckoutStarted)
         let cart = rootStore.state.cart
