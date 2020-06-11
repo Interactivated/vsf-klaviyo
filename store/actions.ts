@@ -9,6 +9,8 @@ import { cacheStorage } from '../'
 import { processURLAddress, onlineHelper } from '@vue-storefront/core/helpers'
 import { Base64 } from '../helpers/webtoolkit.base64.js'
 
+declare var window: any
+
 const encode = (json) => {
   return Base64.encode(JSON.stringify(json)) // ERROR: Failed to execute 'btoa' on 'Window': The string to be encoded contains characters outside of the Latin1 range.
 }
@@ -134,23 +136,24 @@ export const actions: ActionTree<KlaviyoState, any> = {
         },
         mode: 'cors'
       }).then(res => res.json())
-        .then(res => {
-          if (Array.isArray(res.result) && res.result.length > 0) {
-            commit(types.NEWSLETTER_SUBSCRIBE)
-            resolve(true)
-          } else {
-            commit(types.NEWSLETTER_UNSUBSCRIBE)
-            resolve(false)
-          }
-        }).catch(err => {
-          reject(err)
-        })
+          .then(res => {
+            if (Array.isArray(res.result) && res.result.length > 0) {
+              commit(types.NEWSLETTER_SUBSCRIBE)
+              resolve(true)
+            } else {
+              commit(types.NEWSLETTER_UNSUBSCRIBE)
+              resolve(false)
+            }
+          }).catch(err => {
+        reject(err)
+      })
     })
   },
 
   subscribe ({ commit, dispatch, state }, email): Promise<Response> {
     if (!state.isSubscribed) {
       return new Promise((resolve, reject) => {
+        let storeCode = window.__INITIAL_STATE__.storeView.storeCode
         fetch(processURLAddress(config.klaviyo.endpoint.subscribe), {
           method: 'POST',
           headers: {
@@ -160,7 +163,7 @@ export const actions: ActionTree<KlaviyoState, any> = {
           mode: 'cors',
           body: JSON.stringify({
             email: email,
-            storeCode: config.defaultStoreCode
+            storeCode: storeCode
           })
         }).then(res => {
           commit(types.NEWSLETTER_SUBSCRIBE)

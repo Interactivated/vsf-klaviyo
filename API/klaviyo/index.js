@@ -72,7 +72,7 @@ module.exports = ({ config, db }) => {
 
     let listId = null
 
-    if (config.storeViews.multistore === true) {
+    if (config.storeViews.multistore === true && userData.storeCode !== '') {
       if (!userData.storeCode) {
         apiStatus(res, 'Provide storeCode!', 500)
         return
