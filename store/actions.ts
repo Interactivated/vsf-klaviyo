@@ -134,17 +134,17 @@ export const actions: ActionTree<KlaviyoState, any> = {
         },
         mode: 'cors'
       }).then(res => res.json())
-        .then(res => {
-          if (Array.isArray(res.result) && res.result.length > 0) {
-            commit(types.NEWSLETTER_SUBSCRIBE)
-            resolve(true)
-          } else {
-            commit(types.NEWSLETTER_UNSUBSCRIBE)
-            resolve(false)
-          }
-        }).catch(err => {
-          reject(err)
-        })
+          .then(res => {
+            if (Array.isArray(res.result) && res.result.length > 0) {
+              commit(types.NEWSLETTER_SUBSCRIBE)
+              resolve(true)
+            } else {
+              commit(types.NEWSLETTER_UNSUBSCRIBE)
+              resolve(false)
+            }
+          }).catch(err => {
+        reject(err)
+      })
     })
   },
 
@@ -160,7 +160,7 @@ export const actions: ActionTree<KlaviyoState, any> = {
           mode: 'cors',
           body: JSON.stringify({
             email: email,
-            storeCode: config.defaultStoreCode
+            storeCode: rootStore.state.storeView.storeCode
           })
         }).then(res => {
           commit(types.NEWSLETTER_SUBSCRIBE)
