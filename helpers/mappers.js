@@ -119,7 +119,7 @@ export const mapOrder = (order) => {
   }
 
   let result = {
-    '$event_id': order.order_id.toString(),
+    '$event_id': order.hasOwnProperty('order_id') ? order.order_id.toString() : `order_${order.cart_id}`,
     '$value': subtotal,
     'ItemNames': products.map(prod => prod.ProductName),
     'Categories': categories,
